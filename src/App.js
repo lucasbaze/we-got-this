@@ -4,11 +4,15 @@ import { Button, SignInForm } from './components';
 import { useStateValue } from './state';
 import { setUser, logout } from './state/reducers/userReducer';
 
+import { useAxios } from './hooks/useAxios.js';
+
 import firebase from './firebase';
 
 function App() {
     const [{ user }, dispatch] = useStateValue();
-
+    const [isLoading, fetchedData] = useAxios(
+        'https://rickandmortyapi.com/api/'
+    );
     console.log(user);
 
     useEffect(() => {
@@ -22,6 +26,8 @@ function App() {
             // });
         });
     }, [dispatch]);
+
+    console.log(fetchedData);
 
     return (
         <>
