@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { Button, SignInForm } from './components';
+
+import { useStateValue } from './state';
+import { setUser, logout } from './state/reducers/userReducer';
+
+import firebase from './firebase';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [{ user }, dispatch] = useStateValue();
+
+    console.log(user);
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(function(user) {
+            console.log(user);
+            // let { displayName, email, photoURL } = user;
+            // setUser(dispatch, {
+            //     displayName,
+            //     email,
+            //     photoURL,
+            // });
+        });
+    }, [dispatch]);
+
+    return (
+        <>
+            <Button />
+            <SignInForm />
+            <button
+                onClick={() => {
+                    firebase.auth().signOut();
+                    logout(dispatch);
+                }}
+            >
+                Sign Out
+            </button>
+        </>
+    );
 }
 
 export default App;
