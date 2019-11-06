@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-//
-//Double check this works... may need some modifications
 export const useAxios = (url, dependencies) => {
     const [isLoading, setIsLoading] = useState(false);
     const [fetchedData, setFetchedData] = useState(null);
@@ -17,7 +15,7 @@ export const useAxios = (url, dependencies) => {
                     throw new Error('Failed to fetch.');
                 }
                 setIsLoading(false);
-                setFetchedData(res.data());
+                setFetchedData(res.data);
             })
             .catch(err => {
                 console.log(err);
