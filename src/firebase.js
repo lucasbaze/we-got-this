@@ -1,4 +1,4 @@
-import firebase, { auth } from 'firebase';
+import firebase from 'firebase';
 
 var firebaseConfig = {
     development: {
@@ -15,7 +15,39 @@ var firebaseConfig = {
     },
 }[process.env.NODE_ENV || 'development'];
 
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
+// firebase.initializeApp(firebaseConfig);
+// firebase.analytics();
 
-export default firebase;
+class Firebase {
+    constructor() {
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+        this.auth = firebase.auth();
+    }
+
+    onAuthStateChanged(callbackSuccess, callbackFailure) {
+        return firebase
+            .auth()
+            .onAuthStateChanged(callbackSuccess, callbackFailure);
+    }
+
+    getStorageRef = () => {
+        return firebase.storage().ref();
+    };
+
+    getFirestore = () => {
+        return firebase.firestore();
+    };
+
+    signInWithCredential = credentials => {
+        return this.auth.signInWithCredential(credentials);
+    };
+
+    signOut = () => {
+        this.auth.signOut();
+    };
+}
+
+const Fire = new Firebase();
+
+export default Fire;

@@ -10,18 +10,19 @@ import { routes } from '../constants/routes';
 
 //State
 import { useStateValue } from '../state';
+import { setUser } from '../state/reducers/userReducer';
 
-//Firebase
-import firebase from '../firebase';
+//Fire
+import Firebase from '../firebase';
 import { auth } from 'firebase';
 
 //
 //Config
-var storageRef = firebase.storage().ref();
+var storageRef = Firebase.getStorageRef();
 let gapi = window.gapi;
 
-function initGoogleClient() {
-    gapi.load('client', () => {
+async function initGoogleClient() {
+    await gapi.load('client', () => {
         console.log('loaded client');
         gapi.client.init({
             apiKey: 'AIzaSyCSuD-_FQ3ockPsbQRsbCRgg1-lmcNsA6I',
@@ -48,11 +49,11 @@ async function login() {
 
     const credential = auth.GoogleAuthProvider.credential(token);
 
-    await firebase.auth().signInWithCredential(credential);
+    await Firebase.signInWithCredential(credential);
 }
 
 function logout() {
-    firebase.auth().signOut();
+    Firebase.signOut();
     const googleAuth = gapi.auth2.getAuthInstance();
     googleAuth.signOut();
 }
@@ -111,58 +112,53 @@ const Dashboard = () => {
 };
 
 const Me = () => {
-    return <h1>Me</h1>;
+    const [{ user }] = useStateValue();
+    return <h1>Me is {user && user.displayName} </h1>;
+};
+
+const LoadingMessage = () => {
+    return <h1>Loading</h1>;
 };
 
 function App() {
     const [{ user }, dispatch] = useStateValue();
-    const [files, setFiles] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     //Initiliaze Google API
     useEffect(() => {
-        async function initLibrary() {
-            await initGoogleClient();
-            setIsLoading(false);
-        }
-
-        initLibrary();
-
-        firebase.auth().onAuthStateChanged(user => {
+        initGoogleClient();
+        Firebase.onAuthStateChanged(user => {
             console.log(user);
-            if (user) {
+            if (user !== null) {
+                setUser(dispatch, user);
+                setIsLoading(false);
+            } else {
                 setIsLoading(false);
             }
         });
-    }, []);
+    }, [dispatch]);
 
-    // initGoogleClient();
-    // firebase.auth().onAuthStateChanged(user => {
-    //     console.log(user);
-    //     if (user) {
-    //         setUser(user);
-    //     }
-    // });
+    if (isLoading) {
+        return <LoadingMessage />;
+    } else {
+        return (
+            <BrowserRouter>
+                <Navigation />
 
-    console.log(files);
-
-    return (
-        <BrowserRouter>
-            <Navigation />
-
-            <Route exact path={routes.AUTH} component={Auth} />
-            <Route path={routes.HOME} component={Dashboard} />
-            <Route path={routes.ME} component={Me} />
-            <Route path={routes.CALENDAR} component={Calendar} />
-            <button
-                onClick={() => {
-                    logout();
-                }}
-            >
-                Sign Out
-            </button>
-        </BrowserRouter>
-    );
+                <Route exact path={routes.AUTH} component={Auth} />
+                <Route path={routes.HOME} component={Dashboard} />
+                <Route path={routes.ME} component={Me} />
+                <Route path={routes.CALENDAR} component={Calendar} />
+                <button
+                    onClick={() => {
+                        logout();
+                    }}
+                >
+                    Sign Out
+                </button>
+            </BrowserRouter>
+        );
+    }
 }
 
 export default App;

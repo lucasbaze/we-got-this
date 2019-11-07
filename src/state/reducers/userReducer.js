@@ -1,10 +1,10 @@
-import firebase from '../../firebase';
+import Firebase from '../../firebase';
 
 //
 // CONFIG
 //
 
-const db = firebase.firestore();
+const db = Firebase.getFirestore();
 
 //
 // Constants
@@ -20,8 +20,12 @@ export const LOGOUT = 'wgt/user/logout';
 export const setUser = (dispatch, user) => {
     console.log('Setting User', user);
 
+    let { displayName, email, photoURL } = user;
+
     db.collection('accounts').add({
-        user,
+        displayName,
+        email,
+        photoURL,
     });
 
     dispatch({
