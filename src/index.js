@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import App from './scenes/App';
 import * as serviceWorker from './serviceWorker';
 
 import { StateProvider } from './state';
 import { mainReducer, initialState } from './state/reducers';
 
-import './firebase';
+// require('dotenv').config();
 
 ReactDOM.render(
     <StateProvider reducer={mainReducer} initialState={initialState}>
