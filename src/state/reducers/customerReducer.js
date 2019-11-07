@@ -15,6 +15,8 @@ export const createCustomer = values => {
 
     let customerID = values.name + '123';
 
+    let createdDate = new Date().toISOString();
+
     db.collection('customers')
         .doc(`${customerID}`)
         .set({
