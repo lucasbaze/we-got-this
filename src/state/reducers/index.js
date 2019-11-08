@@ -1,10 +1,11 @@
 //
 //Import in individual reducers here
 import authReducer, { authState } from '../auth/authReducer';
+import customerReducer, { customerState } from '../customer/customerReducer';
 
 //
 //Destructure state object here
-export const mainReducer = ({ auth }, action) => {
+export const mainReducer = ({ auth, customers }, action) => {
     console.log('Auth state', auth, 'Auth Action', action);
     return {
         //
@@ -13,9 +14,11 @@ export const mainReducer = ({ auth }, action) => {
         //
         //Destructure state object and define with reducer here
         auth: authReducer(auth, action),
+        customers: customerReducer(customers, action),
     };
 };
 
 export const initialState = {
     auth: authState,
+    customers: customerState,
 };

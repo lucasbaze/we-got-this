@@ -10,6 +10,10 @@ export const types = {
     AUTH_ERROR: 'AUTH_ERROR',
 
     AUTH_LOGOUT: 'AUTH_LOGOUT',
+
+    AUTH_UPDATE_USER_START: 'AUTH_UPDATE_USER_START',
+    AUTH_UPDATE_USER_SUCCESS: 'AUTH_UPDATE_USER_SUCCESS',
+    AUTH_UPDATE_USER_ERROR: 'AUTH_UPDATE_USER_ERROR',
 };
 
 export const actions = {
@@ -44,22 +48,27 @@ export const actions = {
         }
     },
 
-    setCurrentUser(dispatch, user) {
-        let { displayName, email, photoURL } = user;
-        dispatch({
-            type: types.AUTH_SUCCESS,
-            payload: {
-                displayName,
-                email,
-                photoURL,
-            },
-        });
-    },
-
     logout(dispatch) {
         Firebase.signOut();
         const googleAuth = gapi.auth2.getAuthInstance();
         googleAuth.signOut();
         dispatch({ type: types.AUTH_LOGOUT });
+    },
+
+    async updateCurrentUser(dispatch, user) {
+        try {
+            dispatch({ type: types.AUTH_UPDATE_USER_START });
+
+            let updatedUser = await service.updateCurrentUser(user);
+            if (!updatedUser) {
+                throw new Error('Failed to update User');
+            }
+            dispatch({
+                type: types.AUTH_UPDATE_USER_SUCCESS,
+                payload: updatedUser,
+            });
+        } catch (err) {
+            dispatch({ type: types.AUTH_UPDATE_USER_ERROR });
+        }
     },
 };
