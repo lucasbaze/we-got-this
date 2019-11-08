@@ -28,6 +28,11 @@ export default function reducer(state, action) {
                 errorMessage: payload || null,
                 currentUser: null,
             };
+        case types.AUTH_LOGOUT:
+            return {
+                ...state,
+                currentUser: null,
+            };
         default:
             return {
                 ...state,

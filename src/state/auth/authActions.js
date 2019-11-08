@@ -1,13 +1,15 @@
 import Firebase from '../../config/firebase';
 import { auth } from 'firebase';
-let gapi = window.gapi;
+import { service } from './authService';
 
-const db = Firebase.getFirestore();
+let gapi = window.gapi;
 
 export const types = {
     AUTH_START: 'AUTH_START',
     AUTH_SUCCESS: 'AUTH_SUCCESS',
     AUTH_ERROR: 'AUTH_ERROR',
+
+    AUTH_LOGOUT: 'AUTH_LOGOUT',
 };
 
 export const actions = {
@@ -27,42 +29,16 @@ export const actions = {
     },
 
     async getOrCreateCurrentUser(dispatch, user) {
-        let { email, displayName, photoURL } = user;
         try {
-            await db
-                .collection('users')
-                .where('email', '==', 'lucas@lucas.com')
-                .get()
-                .then(querySnapShot => {
-                    if (!querySnapShot.empty) {
-                        //Set the user data to global State
-                        querySnapShot.forEach(doc => {
-                            console.log('Got User. Setting to State');
-                            dispatch({
-                                type: types.AUTH_SUCCESS,
-                                payload: doc.data(),
-                            });
-                        });
-                    } else {
-                        //Create a new user
-                        db.collection('users')
-                            .add({
-                                email,
-                                displayName,
-                                photoURL,
-                            })
-                            .then(docRef => {
-                                //Get that user and set to global state.
-                                docRef.get().then(doc => {
-                                    dispatch({
-                                        type: types.AUTH_SUCCESS,
-                                        payload: doc.data(),
-                                    });
-                                });
-                            });
-                    }
-                    console.log(querySnapShot.empty);
-                });
+            dispatch({ type: types.AUTH_START });
+
+            let data = await service.getOrCreateCurrentUser(user);
+            console.log(data);
+
+            dispatch({
+                type: types.AUTH_SUCCESS,
+                payload: data,
+            });
         } catch (error) {
             dispatch({ type: types.AUTH_ERROR });
         }
@@ -80,9 +56,10 @@ export const actions = {
         });
     },
 
-    logout() {
+    logout(dispatch) {
         Firebase.signOut();
         const googleAuth = gapi.auth2.getAuthInstance();
         googleAuth.signOut();
+        dispatch({ type: types.AUTH_LOGOUT });
     },
 };

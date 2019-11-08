@@ -6,7 +6,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { initGoogleClient } from '../config/googleClient';
 
 //Components / Scenes
-import { Navigation, CreateCustomerForm } from '../components';
+import { Navigation, CreateCustomerForm, SplashLoading } from '../components';
 import Calendar from './Calendar';
 import Auth from './Auth';
 
@@ -67,10 +67,6 @@ const Me = () => {
     return <h1>Me is {auth.currentUser && auth.currentUser.displayName} </h1>;
 };
 
-const LoadingMessage = () => {
-    return <h1>Loading</h1>;
-};
-
 function App() {
     const [{ auth }, dispatch] = useStateValue();
     const [isLoading, setIsLoading] = useState(true);
@@ -92,7 +88,7 @@ function App() {
     }, [dispatch]);
 
     if (isLoading) {
-        return <LoadingMessage />;
+        return <SplashLoading />;
     } else {
         return (
             <BrowserRouter>
