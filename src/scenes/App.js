@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 
 //Components / Scenes
-import { Navigation, CreateCustomerForm } from '../components';
+import { Navigation, CreateCustomerForm, RegisterCompany } from '../components';
 import Calendar from './Calendar';
 
 //Constants
@@ -15,6 +15,7 @@ import { setUser } from '../state/reducers/userReducer';
 //Fire
 import Firebase from '../firebase';
 import { auth } from 'firebase';
+
 
 //
 //Config
@@ -159,6 +160,7 @@ function App() {
                 </button>
 
                 <CreateCustomerForm />
+                <RegisterCompany/>
             </BrowserRouter>
         );
     }
