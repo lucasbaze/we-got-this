@@ -29,7 +29,7 @@ const Auth = () => {
             </button>
             <button
                 onClick={() => {
-                    actions.logout();
+                    actions.logout(dispatch);
                 }}
             >
                 Sign Out
