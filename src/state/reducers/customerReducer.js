@@ -1,4 +1,4 @@
-import Firebase from '../../firebase';
+import Firebase from '../../config/firebase';
 
 //
 //Config
@@ -12,12 +12,11 @@ const db = Firebase.getFirestore();
 
 export const SET_CUSTOMERS = 'wgt/customer/set_customer';
 
-
 //
 // Actions
 //
 
-export async function createCustomer(values){
+export async function createCustomer(values) {
     // db.collection('customers')
     //     .add({
     //         ...values,
@@ -35,17 +34,20 @@ export async function createCustomer(values){
         .set({
             customerID,
             ...values,
-		});
-		
-	getCustomers();
-};
+        });
 
-export async function getCustomers(accountID){
-	db.collection('customers').where('account_id', '==', `${accountID}` ).get().then(querySnapshot => {
-		querySnapshot.forEach(doc => {
-			console.log(doc.id, " => ", doc.data())
-		})
-	})
+    getCustomers();
+}
+
+export async function getCustomers(accountID) {
+    db.collection('customers')
+        .where('account_id', '==', `${accountID}`)
+        .get()
+        .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+                console.log(doc.id, ' => ', doc.data());
+            });
+        });
 }
 
 //
@@ -53,18 +55,18 @@ export async function getCustomers(accountID){
 //
 
 export default function reducer(state, action) {
-	//define payload
-	let payload = action.payload;
+    //define payload
+    let payload = action.payload;
 
-	switch (action.type) {
-		case SET_CUSTOMERS:
-			return {
-				...state,
-				customers: 
-			};
-		default:
-			return {
-				...state,
-			};
-	}
+    switch (action.type) {
+        case SET_CUSTOMERS:
+            return {
+                ...state,
+                customers: payload,
+            };
+        default:
+            return {
+                ...state,
+            };
+    }
 }

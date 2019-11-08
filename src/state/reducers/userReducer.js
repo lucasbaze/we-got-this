@@ -1,67 +1,79 @@
-import Firebase from '../../firebase';
+// import Firebase from '../../config/firebase';
 
-//
-// CONFIG
-//
+// //
+// // CONFIG
+// //
 
-const db = Firebase.getFirestore();
+// const db = Firebase.getFirestore();
 
-//
-// Constants
-//
+// //
+// // Constants
+// //
 
-export const SET_USER = 'wgt/user/set_user';
-export const LOGOUT = 'wgt/user/logout';
+// export const SET_USER = 'wgt/user/set_user';
+// export const LOGOUT = 'wgt/user/logout';
 
-//
-// Actions
-//
+// const actions = {
+//     SET_USER: '',
+// };
 
-export const setUser = (dispatch, user) => {
-    console.log('Setting User', user);
+// //
+// // Actions
+// //
 
-    let { displayName, email, photoURL } = user;
+// export function setUser(dispatch, user) {
+//     console.log('Setting User', user);
 
-    db.collection('accounts').add({
-        displayName,
-        email,
-        photoURL,
-    });
+//     let { displayName, email, photoURL } = user;
 
-    dispatch({
-        type: SET_USER,
-        payload: user,
-    });
-};
+//     //
+//     //Firebase Actions
+//     // db.collection('accounts').add({
+//     //     displayName,
+//     //     email,
+//     //     photoURL,
+//     // });
 
-export const logout = dispatch => {
-    dispatch({
-        type: LOGOUT,
-    });
-};
+//     dispatch({
+//         type: SET_USER,
+//         payload: user,
+//     });
+// }
 
-//
-// Reducer
-//
-export default function reducer(state, action) {
-    //define payload
-    let payload = action.payload;
+// export const logout = dispatch => {
+//     dispatch({
+//         type: LOGOUT,
+//     });
+// };
 
-    switch (action.type) {
-        case SET_USER:
-            return {
-                ...state,
-                ...payload,
-            };
+// //
+// // Initial State
+// const initState = {
+//     authUser: null,
+//     currectUser: null,
+// };
 
-        case LOGOUT:
-            return {
-                ...state,
-                user: null,
-            };
-        default:
-            return {
-                ...state,
-            };
-    }
-}
+// // Reducer
+// //
+// export default function reducer(state, action) {
+//     //define payload
+//     let payload = action.payload;
+
+//     switch (action.type) {
+//         case SET_USER:
+//             return {
+//                 ...state,
+//                 ...payload,
+//             };
+
+//         case LOGOUT:
+//             return {
+//                 ...state,
+//                 user: null,
+//             };
+//         default:
+//             return {
+//                 ...state,
+//             };
+//     }
+// }
